@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "start": "export $(cat .env) && node index.mjs"
+  },
+  "dependencies": {
+    "grammy": "^1.25.1"
+  }
+}
