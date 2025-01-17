@@ -3,6 +3,7 @@
     "start": "export $(cat .env) && node index.mjs"
   },
   "dependencies": {
-    "grammy": "^1.25.1"
+    "grammy": "^1.25.1",
+    "winston": "^3.17.0"
   }
 }

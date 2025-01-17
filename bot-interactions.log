@@ -1,0 +1,18 @@
+2025-01-17 22:24:06 [info]: Bot is starting...
+2025-01-17 22:24:24 [info]: User: backer, Interaction: /pay
+2025-01-17 22:24:24 [info]: User backer initiated /pay command.
+2025-01-17 22:24:26 [info]: User: backer, Interaction: /start
+2025-01-17 22:24:26 [info]: User backer used /start command.
+2025-01-17 22:24:28 [info]: User: backer, Interaction: /pay
+2025-01-17 22:24:28 [info]: User backer initiated /pay command.
+2025-01-17 22:24:31 [info]: User: backer, Interaction: non-text interaction
+2025-01-17 22:24:31 [info]: Pre-checkout query received for User ID: 6287477530
+2025-01-17 22:24:32 [info]: User: backer, Interaction: non-text interaction
+2025-01-17 22:24:32 [info]: Invoice Payload: {"userId":6287477530}
+2025-01-17 22:24:32 [info]: Payment successful. User ID: 6287477530, Payment ID: stx3ellVvdr4icNy0oDMf2kaPM2wkWjDQ1OJvfOS1gLjctdjtV1FeISZrBcqSu5p117SjUTqUTt5gEShdkBF1Bmlpbm_sFbYeKK9ALDSnvIgmA, Amount: 2 Stars
+2025-01-17 22:25:38 [info]: User: backer, Interaction: /status
+2025-01-17 22:25:38 [info]: User backer checked payment status: User has paid a total of 2 Stars.
+2025-01-17 22:25:41 [info]: User: backer, Interaction: /refund
+2025-01-17 22:25:41 [error]: Refund failed for User ID: 6287477530
+2025-01-17 22:25:44 [info]: User: backer, Interaction: /refund
+2025-01-17 22:25:44 [error]: Refund failed for User ID: 6287477530
