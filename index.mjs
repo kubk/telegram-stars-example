@@ -87,7 +87,10 @@ bot.on("message:successful_payment", (ctx) => {
 });
 
 
-// Log status checks
+/*
+    Handles the /status command.
+    Checks if the user has made a payment and responds with their payment status.
+*/
 bot.command("status", (ctx) => {
   const user = ctx.from.username || ctx.from.id;
 
@@ -98,9 +101,9 @@ bot.command("status", (ctx) => {
     if (Array.isArray(payments)) {
       const totalAmount = payments.reduce((sum, payment) => sum + payment.amount, 0);
       logger.info(
-        `User ${user} checked payment status: User has paid a total of ${totalAmount} Stars.`
+        `User ${user} checked payment status: User has paid a total of ⭐ ${totalAmount} Stars.`
       );
-      ctx.reply(`You have made ${payments.length} payment(s) totaling ${totalAmount} Stars.`);
+      ctx.reply(`You have made ${payments.length} payment(s) totaling ⭐ ${totalAmount} Stars.`);
     } else {
       logger.error(`Payments for user ${user} is not an array.`);
       ctx.reply("There was an error retrieving your payment status. Please try again.");
@@ -112,25 +115,46 @@ bot.command("status", (ctx) => {
 });
 
 
-// Log refund requests
-bot.command("refund", (ctx) => {
+/*
+  Handles the /refund command.
+  Refunds the payment made by the user if applicable. If the user hasn't paid, informs them that no refund is possible.
+*/
+bot.command("refund", async (ctx) => {
   const userId = ctx.from.id;
+
   if (!paidUsers.has(userId)) {
     logger.info(`User ${userId} requested a refund but has not paid.`);
-    return ctx.reply("You have not paid yet, there is nothing to refund");
+    return ctx.reply("You have not paid yet, there is nothing to refund.");
   }
 
-  ctx.api
-    .refundStarPayment(userId, paidUsers.get(userId)) // Initiates the refund
-    .then(() => {
-      paidUsers.delete(userId); // Remove user from paid list
-      logger.info(`Refund successful for User ID: ${userId}`);
-      ctx.reply("Refund successful");
-    })
-    .catch(() => {
-      logger.error(`Refund failed for User ID: ${userId}`);
-      ctx.reply("Refund failed");
-    });
+  const payments = paidUsers.get(userId);
+  if (!payments || payments.length === 0) {
+    logger.info(`No valid payments found for refund. User ID: ${userId}`);
+    return ctx.reply("There are no valid payments to refund.");
+  }
+
+  // Get the most recent payment
+  const lastPayment = payments[payments.length - 1]; // Peek at the last payment without removing it
+  logger.info(
+    `Refund requested for User ID: ${userId}, Payment ID: ${lastPayment.paymentId}, Amount: ${lastPayment.amount}`
+  );
+
+  // Process the refund logic
+  try {
+    await ctx.api.refundStarPayment(userId, lastPayment.paymentId); // If supported in your setup
+    payments.pop(); // Remove the refunded payment from the array
+    if (payments.length === 0) {
+      paidUsers.delete(userId); // Remove user if no payments remain
+    } else {
+      paidUsers.set(userId, payments); // Update payments map
+    }
+
+    logger.info(`Refund processed successfully for Payment ID: ${lastPayment.paymentId}`);
+    return ctx.reply(`Refund of ⭐ ${lastPayment.amount} Stars has been successfully processed.`);
+  } catch (error) {
+    logger.error(`Refund failed for Payment ID: ${lastPayment.paymentId}, Error: ${error.message}`);
+    return ctx.reply("Refund failed. Please contact support.");
+  }
 });
 
 
